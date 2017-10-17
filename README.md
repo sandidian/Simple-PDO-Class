@@ -1,7 +1,7 @@
-PDO Instance
+PDO class
 ============================
 
-Best instance PDO class for rapidly creating small project.
+Best PDO class for creating small project.
 
 
 ### Setup Database
@@ -37,6 +37,22 @@ echo "<pre>";print_r($one);
 ```
 
 
+### select all with select field
+
+
+This following code will get many row using `all` method.
+```php
+$query = new Query;
+$query->find("user")
+        ->select("id,username")
+        ->where(['status' => 1])
+        ->orderBy("id desc");
+
+$result = $query->all();
+
+//print result
+echo "<pre>";print_r($result);
+```
 ### select all with limit
 
 
@@ -54,6 +70,27 @@ $result = $query->all();
 echo "<pre>";print_r($result);
 ```
 
+### select all with inner join
+
+
+This following code will get many row using `all` method.
+```php
+$query = new Query;
+$query->find("posts")
+        ->select("posts .*, categorys,rate")
+        ->innerJoin([
+            'categorys'=>'categorys.id=posts.categoryId',
+            'rate'=>'rate.id=posts.rateId'
+        ])
+        ->where(['status' => 1])
+        ->orderBy("id desc");
+
+$result = $query->all();
+
+//print result
+echo "<pre>";print_r($result);
+```
+
 ### select and filter where
 
 
@@ -62,7 +99,7 @@ This following code will get many row using all() method.
 $qr = new Query();
 $models = $qr->find("user")
         ->where(['status'=>1])
-        ->andFilterWhere(['LIKE', 'name', '%Andy%'])
+        ->andFilterWhere(['LIKE', 'name', '%Sandi%'])
         ->all();
 if ($models)
     foreach ($models as $model) {
@@ -92,12 +129,10 @@ $models = $qr->find("user")
 
 This following example how to insert data 
 ```php
+$data = ['id'=>1,'username'=>'Sandi Dian Lesmana Putra'];
 $query = new Query;
 $query->find('user');
-$query->name = "Andy Laser";
-$query->email = 'my_email@gmail.com';
-$query->username = "laser";
-$query->save();
+$query->save($data);
 
 echo "<pre>";print_r($query);
 
@@ -110,11 +145,11 @@ echo 'my id is:' . $query->id . ' and my name is ' . $query->name. ' and table n
 
 This following example how to update data and using where and one() method
 ```php
+$data = ['id'=>100,'username'=>'Adit Mulyadi'];
 $user = new Query();
-$user->find('user')->where(['id' => 12])->one();
+$user->find('user')->where(['id' => 1])->one();
 
-$user->username = 'testing1123232';
-$user->save();
+$user->save($data);
 
 echo 'my id is:' . $query->id . ' and my name is ' . $query->name . ' and table name is ' . $query->table;
 ```
